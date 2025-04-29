@@ -21,7 +21,7 @@ jobs:
       uses: azure/container-apps-deploy-action@v1
       with:
         appSourcePath: ${{ github.workspace }}/todo-app
-        acrName: acrudemylearn
+        acrName: acrudemylearn-b6gjgtfqcpedffhj
         containerAppName: todoapp
         resourceGroup: udemy-container-cicd
         environmentVariables: |
