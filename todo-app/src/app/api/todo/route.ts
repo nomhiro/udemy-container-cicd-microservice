@@ -7,10 +7,6 @@ const key = process.env.COSMOS_DB_KEY;
 console.log('COSMOS_DB_ENDPOINT:', endpoint || 'Not Defined');
 console.log('COSMOS_DB_KEY:', key ? 'Defined' : 'Not Defined'); // セキュリティのため値は表示しない
 
-if (!endpoint || !key) {
-  throw new Error('COSMOS_DB_ENDPOINT or COSMOS_DB_KEY is not defined in environment variables.');
-}
-
 const databaseId = 'ToDoApp';
 const containerId = 'ToDo';
 
