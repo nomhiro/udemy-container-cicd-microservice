@@ -10,6 +10,14 @@ COPY package.json package-lock.json ./
 # 依存関係をインストール
 RUN npm install
 
+# 環境変数をビルド時に受け取る
+ARG COSMOS_DB_ENDPOINT
+ARG COSMOS_DB_KEY
+
+# 環境変数をランタイムに渡す
+ENV COSMOS_DB_ENDPOINT=${COSMOS_DB_ENDPOINT}
+ENV COSMOS_DB_KEY=${COSMOS_DB_KEY}
+
 # アプリケーションコードをコピー
 COPY . .
 
