@@ -1,0 +1,45 @@
+name: ToDo App Workflow
+
+# このワークフローは、リポジトリにプッシュされたときにトリガーされます
+on: [push]
+
+jobs:
+  build:
+    # Ubuntu 最新バージョンのランナーを使用
+    runs-on: ubuntu-latest
+
+    steps:
+    # リポジトリのコードをチェックアウト
+    - uses: actions/checkout@v2
+
+    # Docker Compose をインストール
+    - name: Install Docker Compose
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y docker-compose
+
+    # Azure Container Registry (ACR) にログイン
+    - uses: azure/docker-login@v1
+      with:
+        login-server: acrudemylearn-b6gjgtfqcpedffhj.azurecr.io
+        username: ${{ secrets.REGISTRY_USERNAME }} # ACRのユーザー名
+        password: ${{ secrets.REGISTRY_PASSWORD }} # ACRのパスワード
+
+    # Docker Compose を使用してイメージをビルドし、ACR にプッシュ
+    - name: Build and Push Docker Image
+      env:
+        COSMOS_DB_ENDPOINT: ${{ secrets.COSMOS_DB_ENDPOINT }}
+        COSMOS_DB_KEY: ${{ secrets.COSMOS_DB_KEY }}
+      run: |
+        docker-compose -f docker-compose.prod.yml build \
+          --build-arg COSMOS_DB_ENDPOINT=${COSMOS_DB_ENDPOINT} \
+          --build-arg COSMOS_DB_KEY=${COSMOS_DB_KEY}
+        docker tag todo-app:latest acrudemylearn-b6gjgtfqcpedffhj.azurecr.io/todoapp:${{ github.sha }}
+        docker push acrudemylearn-b6gjgtfqcpedffhj.azurecr.io/todoapp:${{ github.sha }}
+
+    # Azure Web App にデプロイ
+    - uses: azure/webapps-deploy@v2
+      with:
+        app-name: todoapp-udemy-learn # デプロイ先の Azure App Service 名
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }} # Azure App Service の公開プロファイル
+        images: acrudemylearn-b6gjgtfqcpedffhj.azurecr.io/todoapp:${{ github.sha }} # デプロイする Docker イメージ

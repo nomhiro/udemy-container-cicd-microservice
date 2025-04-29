@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  todo-app:
+    image: todo-app:latest
+    build:
+      context: ./todo-app
+      dockerfile: Dockerfile
+      args:
+        COSMOS_DB_ENDPOINT: ${COSMOS_DB_ENDPOINT}
+        COSMOS_DB_KEY: ${COSMOS_DB_KEY}
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - COSMOS_DB_ENDPOINT=${COSMOS_DB_ENDPOINT}
+      - COSMOS_DB_KEY=${COSMOS_DB_KEY}
+    stdin_open: true
+    tty: true

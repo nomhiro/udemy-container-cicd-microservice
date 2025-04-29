@@ -1,0 +1,4 @@
+azure-cosmos
+schedule
+pytz
+python-dateutil
