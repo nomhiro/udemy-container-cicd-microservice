@@ -54,7 +54,7 @@ Secret：パスワード
 COSMOS_DB_ENDPOINT と COSMOS_DB_KEY を登録
 ![alt text](image-14.png)
 
-## yamlファイルの作成
+## Actions yamlファイルの作成
 ```yaml
 name: ToDo App Workflow
 

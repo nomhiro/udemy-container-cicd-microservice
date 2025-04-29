@@ -17,3 +17,13 @@ services:
       - ./todo-app/.env.local
     stdin_open: true
     tty: true
+
+  notify-service:
+    image: notify-service:latest
+    build:
+      context: ./notify-service
+      dockerfile: Dockerfile
+    env_file:
+      - ./notify-service/.env
+    stdin_open: true
+    tty: true

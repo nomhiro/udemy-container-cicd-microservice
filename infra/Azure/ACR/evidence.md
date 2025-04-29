@@ -26,3 +26,17 @@ docker push acrudemylearn-b6gjgtfqcpedffhj.azurecr.io/todo-app
 ![alt text](image-5.png)
 
 ![alt text](image-6.png)
+
+## Notify-service Container
+
+```bash
+docker tag notify-service acrudemylearn-b6gjgtfqcpedffhj.azurecr.io/notify-service
+az acr login --name acrudemylearn
+docker push acrudemylearn-b6gjgtfqcpedffhj.azurecr.io/notify-service
+```
+
+# Actionsのyamlファイルの作成
+
+Container AppsのマネージドIDが有効かどうかを確認
+
+```yaml

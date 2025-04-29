@@ -3,7 +3,6 @@ from azure.cosmos import CosmosClient
 from datetime import datetime, timedelta
 import smtplib
 from email.mime.text import MIMEText
-from schedule import every, run_pending, clear
 import time
 import pytz
 import logging
@@ -17,7 +16,6 @@ COSMOS_DB_ENDPOINT = os.getenv('COSMOS_DB_ENDPOINT')
 COSMOS_DB_KEY = os.getenv('COSMOS_DB_KEY')
 DATABASE_ID = 'ToDoApp'
 CONTAINER_ID = 'ToDo'
-NOTIFY_INTERVAL_MINUTES = int(os.getenv('NOTIFY_INTERVAL_MINUTES', '60'))  # デフォルトは60分
 JST = pytz.timezone('Asia/Tokyo')
 
 # CosmosDBクライアントのセットアップ
@@ -89,29 +87,13 @@ def notify_due_tasks():
         body = create_email_body(expired_tasks, "Tasks that are overdue")
         send_email("Expired Tasks", body)
 
-def schedule_notifications():
-    """通知スケジュールを設定"""
-    clear()  # 既存のスケジュールをクリア
-    interval_seconds = NOTIFY_INTERVAL_MINUTES * 60
-
-    def schedule_task():
-        notify_due_tasks()
-        next_run = datetime.now(JST) + timedelta(seconds=interval_seconds)
-        logging.info(f"Next notification scheduled at {next_run.strftime('%Y-%m-%d %H:%M:%S')}")
-
-    every(interval_seconds).seconds.do(schedule_task)
-    logging.info(f"Notifications scheduled every {NOTIFY_INTERVAL_MINUTES} minutes starting now.")
-
 def main():
     logging.info("Notification service started.")
-    schedule_notifications()
-    while True:
-        try:
-            run_pending()
-            time.sleep(1)
-        except Exception as e:
-            logging.error(f"An error occurred in the main loop: {e}")
-            time.sleep(5)
+    try:
+        notify_due_tasks()  # 起動時に一度だけ通知を実行
+        logging.info("Notification task completed.")
+    except Exception as e:
+        logging.error(f"An error occurred during notification execution: {e}")
 
 if __name__ == "__main__":
     main()

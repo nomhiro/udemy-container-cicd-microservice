@@ -17,3 +17,11 @@ services:
       - COSMOS_DB_KEY=${COSMOS_DB_KEY}
     stdin_open: true
     tty: true
+
+  notify-service:
+    image: notify-service:latest
+    build:
+      context: ./notify-service
+      dockerfile: Dockerfile
+    stdin_open: true
+    tty: true
