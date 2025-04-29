@@ -17,13 +17,22 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Build and deploy Container App
+    # Docker Compose を使用してイメージをビルドし、ACR にプッシュ
+    - name: Build and Push Docker Image
+      env:
+        COSMOS_DB_ENDPOINT: ${{ secrets.COSMOS_DB_ENDPOINT }}
+        COSMOS_DB_KEY: ${{ secrets.COSMOS_DB_KEY }}
+      run: |
+        docker-compose -f docker-compose.prod.yml build \
+          --build-arg COSMOS_DB_ENDPOINT=${COSMOS_DB_ENDPOINT} \
+          --build-arg COSMOS_DB_KEY=${COSMOS_DB_KEY}
+        docker tag todo-app:latest acrudemylearn-b6gjgtfqcpedffhj.azurecr.io/todo-app:${{ github.sha }}
+        docker push acrudemylearn-b6gjgtfqcpedffhj.azurecr.io/todo-app:${{ github.sha }}
+  
+    - name: deploy Container App
       uses: azure/container-apps-deploy-action@v1
       with:
-        appSourcePath: ${{ github.workspace }}/todo-app
         acrName: acrudemylearn-b6gjgtfqcpedffhj
-        containerAppName: todoapp
+        containerAppName: todo-app
         resourceGroup: udemy-container-cicd
-        environmentVariables: |
-          COSMOS_DB_ENDPOINT=${{ secrets.COSMOS_DB_ENDPOINT }}
-          COSMOS_DB_KEY=${{ secrets.COSMOS_DB_KEY }}
+        imageToDeploy: acrudemylearn-b6gjgtfqcpedffhj/todo-app:${{ github.sha }}
