@@ -19,6 +19,12 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y docker-compose
 
+    # Azureにログイン
+    - name: Log in to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
     # Azure Container Registry (ACR) にログイン
     - name: Log in to ACR
       uses: azure/docker-login@v1
@@ -27,11 +33,6 @@ jobs:
         username: ${{ secrets.REGISTRY_USERNAME }} # ACRのユーザー名
         password: ${{ secrets.REGISTRY_PASSWORD }} # ACRのパスワード
     
-    - name: Log in to Azure
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-
     # Docker Compose を使用してイメージをビルドし、ACR にプッシュ
     - name: Build and Push Docker Image
       env:
