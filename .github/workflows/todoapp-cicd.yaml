@@ -41,8 +41,6 @@ jobs:
           --build-arg COSMOS_DB_KEY="${COSMOS_DB_KEY}"
         docker tag todo-app:latest acrudemylearn-b6gjgtfqcpedffhj.azurecr.io/todo-app:${{ github.sha }}
         docker push acrudemylearn-b6gjgtfqcpedffhj.azurecr.io/todo-app:${{ github.sha }}
-        docker tag notify-service:latest acrudemylearn-b6gjgtfqcpedffhj.azurecr.io/notify-service:latest
-        docker push acrudemylearn-b6gjgtfqcpedffhj.azurecr.io/notify-service:latest
 
   deploy:
     # デプロイフェーズはビルドフェーズが完了してから実行
@@ -71,20 +69,3 @@ jobs:
         imageToDeploy: acrudemylearn-b6gjgtfqcpedffhj.azurecr.io/todo-app:${{ github.sha }}
         # 環境変数をコンテナアプリに渡す
         environmentVariables: "COSMOS_DB_ENDPOINT='${{ secrets.COSMOS_DB_ENDPOINT }}' COSMOS_DB_KEY='${{ secrets.COSMOS_DB_KEY }}' SENDER_EMAIL='${{ secrets.SENDER_EMAIL }}' EMAIL_PASSWORD='${{ secrets.EMAIL_PASSWORD }}' RECIPIENT_EMAIL='${{ secrets.RECIPIENT_EMAIL }}'"
-
-    # notify-serviceコンテナをデプロイ
-    # - name: deploy Notify Service
-    #   uses: azure/container-apps-deploy-action@v1
-    #   with:
-    #     # ACRの名前を指定
-    #     acrName: acrudemylearn-b6gjgtfqcpedffhj
-    #     # デプロイするコンテナアプリの名前
-    #     containerAppName: todo-notify-service
-    #     # リソースグループの名前
-    #     resourceGroup: udemy-container-cicd
-    #     # デプロイするイメージを指定
-    #     imageToDeploy: acrudemylearn-b6gjgtfqcpedffhj.azurecr.io/notify-service:${{ github.sha }}
-    #     # 環境変数をジョブ用コンテナアプリに渡す
-    #     environmentVariables: "COSMOS_DB_ENDPOINT='${{ secrets.COSMOS_DB_ENDPOINT }}' COSMOS_DB_KEY='${{ secrets.COSMOS_DB_KEY }}' SENDER_EMAIL='${{ secrets.SENDER_EMAIL }}' EMAIL_PASSWORD='${{ secrets.EMAIL_PASSWORD }}' RECIPIENT_EMAIL='${{ secrets.RECIPIENT_EMAIL }}'"
-    #     # ジョブ用の設定を追加
-    #     workloadProfileName: "job"
