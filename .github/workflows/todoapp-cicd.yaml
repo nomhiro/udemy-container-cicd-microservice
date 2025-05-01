@@ -49,6 +49,9 @@ jobs:
   
     - name: deploy Container App
       uses: azure/container-apps-deploy-action@v1
+      env:
+        COSMOS_DB_ENDPOINT: ${{ secrets.COSMOS_DB_ENDPOINT }}
+        COSMOS_DB_KEY: ${{ secrets.COSMOS_DB_KEY }}
       with:
         acrName: acrudemylearn-b6gjgtfqcpedffhj
         containerAppName: todoapp
@@ -56,4 +59,4 @@ jobs:
         imageToDeploy: acrudemylearn-b6gjgtfqcpedffhj.azurecr.io/todo-app:${{ github.sha }}
         environmentVariables: |
           COSMOS_DB_ENDPOINT=${COSMOS_DB_ENDPOINT}
-          COSMOS_DB_KEY=secretref:cosmos-db-key
+          COSMOS_DB_KEY=${COSMOS_DB_KEY}
