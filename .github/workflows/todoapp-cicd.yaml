@@ -54,6 +54,6 @@ jobs:
         containerAppName: todoapp
         resourceGroup: udemy-container-cicd
         imageToDeploy: acrudemylearn-b6gjgtfqcpedffhj.azurecr.io/todo-app:${{ github.sha }}
-        envVars: |
-          COSMOS_DB_ENDPOINT=${{ secrets.COSMOS_DB_ENDPOINT }}
-          COSMOS_DB_KEY=${{ secrets.COSMOS_DB_KEY }}
+        environmentVariables: |
+          COSMOS_DB_ENDPOINT=secretref:COSMOS_DB_ENDPOINT
+          COSMOS_DB_KEY=secretref:COSMOS_DB_KEY
