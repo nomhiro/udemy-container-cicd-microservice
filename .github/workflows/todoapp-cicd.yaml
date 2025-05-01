@@ -35,9 +35,12 @@ jobs:
     
     # Docker Compose を使用してイメージをビルドし、ACR にプッシュ
     - name: Build and Push Docker Image
+      # 環境変数を設定（Cosmos DBのエンドポイントとキーを使用）
       env:
         COSMOS_DB_ENDPOINT: ${{ secrets.COSMOS_DB_ENDPOINT }}
         COSMOS_DB_KEY: ${{ secrets.COSMOS_DB_KEY }}
+      # Docker Compose を使用してプロダクション用のイメージをビルド
+      # ビルドしたイメージをACRにタグ付けしてプッシュ
       run: |
         docker-compose -f docker-compose.prod.yml build \
           --build-arg COSMOS_DB_ENDPOINT="${COSMOS_DB_ENDPOINT}" \
@@ -47,17 +50,24 @@ jobs:
         docker tag notify-service:latest acrudemylearn-b6gjgtfqcpedffhj.azurecr.io/notify-service:${{ github.sha }}
         docker push acrudemylearn-b6gjgtfqcpedffhj.azurecr.io/notify-service:${{ github.sha }}
   
+    # Azure Container Apps にデプロイ
     - name: deploy Container App
       uses: azure/container-apps-deploy-action@v1
-      env:
-        COSMOS_DB_ENDPOINT: ${{ secrets.COSMOS_DB_ENDPOINT }}
-        COSMOS_DB_KEY: ${{ secrets.COSMOS_DB_KEY }}
-        SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
-        EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
-        RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
+      # 環境変数を設定（Cosmos DBやメール設定を含む）
+      # env:
+      #   COSMOS_DB_ENDPOINT: ${{ secrets.COSMOS_DB_ENDPOINT }}
+      #   COSMOS_DB_KEY: ${{ secrets.COSMOS_DB_KEY }}
+      #   SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
+      #   EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+      #   RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
       with:
+        # ACRの名前を指定
         acrName: acrudemylearn-b6gjgtfqcpedffhj
+        # デプロイするコンテナアプリの名前
         containerAppName: todoapp
+        # リソースグループの名前
         resourceGroup: udemy-container-cicd
+        # デプロイするイメージを指定
         imageToDeploy: acrudemylearn-b6gjgtfqcpedffhj.azurecr.io/todo-app:${{ github.sha }}
+        # 環境変数をコンテナアプリに渡す
         environmentVariables: "COSMOS_DB_ENDPOINT='${{ secrets.COSMOS_DB_ENDPOINT }}' COSMOS_DB_KEY='${{ secrets.COSMOS_DB_KEY }}' SENDER_EMAIL='${{ secrets.SENDER_EMAIL }}' EMAIL_PASSWORD='${{ secrets.EMAIL_PASSWORD }}' RECIPIENT_EMAIL='${{ secrets.RECIPIENT_EMAIL }}'"
