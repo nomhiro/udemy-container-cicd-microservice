@@ -64,8 +64,8 @@ Name：AZURE_CREDENTIALS
 Secret：Jsonをそのままペースト
 ![alt text](image-19.png)
 
-## Cosmos DB Keyをシークレットとして設定
-
+## Cosmos DB Keyをシークレットとして設定？？
+cicdのyamlで環境変数設定できれば不要かも
 ![alt text](image-20.png)
 
 ### yamlファイルの作成
