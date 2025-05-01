@@ -6,6 +6,7 @@ const HomePage = () => {
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex flex-col items-center justify-center">
       <h1 className="text-4xl font-bold mb-4">Welcome to the TODO App</h1>
       <p className="text-lg text-center mb-6 max-w-2xl">
+        Release 2025 05 01 - 18:27
         This application allows you to manage your TODO items efficiently. You can create, edit, and delete TODOs.
       </p>
       <Link href="/todo">
