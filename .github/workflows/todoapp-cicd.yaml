@@ -10,7 +10,8 @@ jobs:
 
     steps:
     # リポジトリのコードをチェックアウト
-    - uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
     # Docker Compose をインストール
     - name: Install Docker Compose
@@ -19,7 +20,8 @@ jobs:
         sudo apt-get install -y docker-compose
 
     # Azure Container Registry (ACR) にログイン
-    - uses: azure/docker-login@v1
+    - name: Log in to ACR
+      uses: azure/docker-login@v1
       with:
         login-server: acrudemylearn-b6gjgtfqcpedffhj.azurecr.io
         username: ${{ secrets.REGISTRY_USERNAME }} # ACRのユーザー名
