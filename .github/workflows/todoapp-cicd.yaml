@@ -51,6 +51,6 @@ jobs:
       uses: azure/container-apps-deploy-action@v1
       with:
         acrName: acrudemylearn-b6gjgtfqcpedffhj
-        containerAppName: todo-app
+        containerAppName: todoapp
         resourceGroup: udemy-container-cicd
         imageToDeploy: acrudemylearn-b6gjgtfqcpedffhj/todo-app:${{ github.sha }}
