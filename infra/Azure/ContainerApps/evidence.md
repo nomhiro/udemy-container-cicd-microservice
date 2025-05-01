@@ -64,5 +64,9 @@ Name：AZURE_CREDENTIALS
 Secret：Jsonをそのままペースト
 ![alt text](image-19.png)
 
+## Cosmos DB Keyをシークレットとして設定
+
+![alt text](image-20.png)
+
 ### yamlファイルの作成
 ```yaml
